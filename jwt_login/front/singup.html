@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block contents %}
+<h1>회원가입페이지</h1>
+
+{{error.msg}}
+
+<form action="signup/" method="POST">
+  {% csrf_token %}
+  <input type="text" name="userid" placeholder="아이디 입력"><br><br>
+  <input type="password" name="password" placeholder="비밀번호 입력"><br><br>
+  <input type="password" name="password_check" placeholder="비밀번호 확인"><br><br>
+  <input type="text" name="nickname" placeholder="닉네임 입력"><br><br>
+  <button type="submit">가입하기</button>
+
+</form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>로그인</h1>
+<a href="signup/">회원가입</a>
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="text" class="userid" name="userid" placeholder="아이디 입력"><br><br>
+  <input type="password" class="user-pwd" name="password" placeholder="비밀번호 입력"><br><br>
+  <button type="submit" onclick="signinBtn(event)">로그인하기</button>
+</form>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+  function signinBtn(event) {
+    event.preventDefault();
+
+    $id = document.querySelector('.userid').value;
+    $password = document.querySelector('.user-pwd').value;
+
+    let signupCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    // let access_token = getCookie('access_token')
+    let param = {
+      'id': $id,
+      'password': $password,
+      // 'access_token': access_token
+    }
+
+    fetch("/user/signin/", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": signupCsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      console.log(response)
+      return response.json()
+    }).then(function (data) {
+      alert('로그인 성공 !')
+      console.log(data['access-token'])
+      document.cookie = `access_token=${data['access-token']}`
+      document.cookie = `user_id=${data['user-id']}`
+      localStorage.setItem('access_token', data['access-token'])
+      location.href='index/';
+      return data
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+</script>
+{% endblock script %}

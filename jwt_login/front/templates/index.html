@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>메인 페이지</h1>
+<strong class="username"></strong>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+
+chk_user = (user_id) =>{
+
+  fetch(`/index/?param=${user_id}`, {
+      method: 'GET',
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        // "userid": JSON.stringify(user_id)
+      },
+    }).then(function (response) {
+      console.log(response)
+      return response.json()
+    }).then(function (data) {
+      console.log(data)
+      if (data['id']){
+        document.querySelector('.username').innerText= `${data['id']}님 환영합니다 !`
+      }
+      return data
+    }).catch((error) => {
+      console.log('error', error);
+    })
+}
+
+  window.addEventListener('DOMContentLoaded', function()
+{
+  let access_token = document.cookie;
+  console.log(access_token)
+  if (access_token == ''){
+    location.href='http://127.0.0.1:8000/';
+  }
+  else{
+    let access_token = document.cookie.split(';')[0].split('=')[1];
+    let user_id = document.cookie.split(';')[1].split('=')[1];
+    chk_user(user_id)
+  }
+});
+
+
+</script>
+{% endblock script %}
